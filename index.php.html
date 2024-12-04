@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Server Banners</title>
+    <style>
+        :root {
+            --minecraft-dark: #1D1F21;
+            --minecraft-green: #4AAB4E;
+            --minecraft-accent: #5865F2;
+            --shadow-color: rgba(0, 0, 0, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Minecraft', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('https://fonts.cdnfonts.com/css/minecraft-4') format('woff2');
+        }
+
+        body {
+            background-color: var(--minecraft-dark);
+            color: white;
+            background-image: 
+                linear-gradient(rgba(29, 31, 33, 0.97), rgba(29, 31, 33, 0.97)),
+                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAABZJREFUeNpi2r9//38GIGBiQAP//wMEGAB89QgdpEjEBQAAAABJRU5ErkJggg==');
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: calc(100% - 350px);
+        }
+
+        .banner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .banner-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .banner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+            border-color: var(--minecraft-green);
+        }
+
+        .banner-image {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .banner-info {
+            padding: 1rem;
+        }
+
+        .server-name {
+            font-size: 1.2rem;
+            color: var(--minecraft-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .description {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .server-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .copy-ip {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--minecraft-accent);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+
+        .copy-ip:hover {
+            background: #4752c4;
+        }
+
+        .embed-code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            word-break: break-all;
+        }
+
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--minecraft-green);
+            text-align: center;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: var(--minecraft-green);
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: white;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--minecraft-green);
+        }
+
+        .file-upload {
+            position: relative;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--minecraft-green);
+            background: rgba(74, 171, 78, 0.1);
+        }
+
+        .file-upload input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .submit-btn {
+            padding: 1rem;
+            background: var(--minecraft-green);
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #3a8a3e;
+        }
+
+        .upload-requirements {
+            font-size: 0.8rem;
+            color: #a0a0a0;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .upload-requirements ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .upload-requirements li {
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upload-requirements li::before {
+            content: "•";
+            color: var(--minecraft-green);
+        }
+
+        @keyframes copySuccess {
+            0% { background: #43b581; }
+            90% { background: #43b581; }
+            100% { background: var(--minecraft-accent); }
+        }
+
+        .copy-success {
+            animation: copySuccess 1.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="banner-grid">
+                <?php
+                $bannerDir = 'banners/';
+                $banners = glob($bannerDir . '*.{png,gif,jpg,jpeg}', GLOB_BRACE);
+
+                foreach ($banners as $banner) {
+                    $serverInfo = json_decode(file_get_contents($bannerDir . basename($banner, '.png') . '.json'), true);
+                    ?>
+                    <div class="banner-card">
+                        <img src="<?php echo $banner; ?>" alt="<?php echo $serverInfo['name']; ?>" class="banner-image">
+                        <div class="banner-info">
+                            <h3 class="server-name"><?php echo $serverInfo['name']; ?></h3>
+                            <p class="description"><?php echo $serverInfo['description']; ?></p>
+                            <div class="server-stats">
+                                <div class="stat">
+                                    <span class="stat-icon">👥</span>
+                                    <?php echo $serverInfo['players']; ?> Players
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-icon">⚡</span>
+                                    <?php echo $serverInfo['version']; ?>
+                                </div>
+                            </div>
+                            <button class="copy-ip" onclick="copyServerIP(this, '<?php echo $serverInfo['ip']; ?>')">
+                                Copy IP Address
+                            </button>
+                            <div class="embed-code">
+                                &lt;img src="https://jcmc.serveminecraft.net/banner/<?php echo basename($banner); ?>" alt="<?php echo $serverInfo['name']; ?>" /&gt;
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <h2 class="sidebar-title">Add Your Server</h2>
+            <form class="upload-form" action="upload.php" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="server-name">Server Name</label>
+                    <input type="text" id="server-name" name="server-name" required placeholder="My Awesome Server">
+                </div>
+
+                <div class="form-group">
+                    <label for="server-ip">Server IP</label>
+                    <input type="text" id="server-ip" name="server-ip" required placeholder="play.myserver.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="server-version">Minecraft Version</label>
+                    <input type="text" id="server-version" name="server-version" required placeholder="1.20.2">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Server Description</label>
+                    <textarea id="description" name="description" rows="4" required 
+                              placeholder="Tell players what makes your server special..."></textarea>
+                </div>
+
+                <div class="file-upload">
+                    <input type="file" id="banner-image" name="banner-image" accept="image/*" required>
+                    <span>Drop your banner here or click to upload</span>
+                </div>
+                <img id="image-preview" class="preview-image" alt="Banner preview">
+
+                <div class="upload-requirements">
+                    <h4>Banner Requirements:</h4>
+                    <ul>
+                        <li>468x60 pixels recommended size</li>
+                        <li>Max file size: 2MB</li>
+                        <li>PNG, JPG, or GIF formats</li>
+                        <li>Must be family-friendly</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="submit-btn">Add Server Banner</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function copyServerIP(button, ip) {
+            navigator.clipboard.writeText(ip).then(() => {
+                button.textContent = 'IP Copied!';
+                button.classList.add('copy-success');
+                setTimeout(() => {
+                    button.textContent = 'Copy IP Address';
+                    button.classList.remove('copy-success');
+                }, 1500);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                button.textContent = 'Failed to copy';
+                setTimeout(() => {
+                    button.textContent = 'Copy IP Address';
+                }, 1500);
+            });
+        }
+
+        document.getElementById('banner-image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('image-preview');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const dropZone = document.querySelector('.file-upload');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.style.borderColor = 'var(--minecraft-green)';
+            dropZone.style.background = 'rgba(74, 171, 78, 0.1)';
+        }
+
+        function unhighlight(e) {
+            dropZone.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+            dropZone.style.background = 'rgba(255, 255, 255, 0.05)';
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const file = dt.files[0];
+            const fileInput = document.getElementById('banner-image');
+            
+            fileInput.files = dt.files;
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('image-preview');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
